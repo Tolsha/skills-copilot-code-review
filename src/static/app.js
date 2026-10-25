@@ -24,6 +24,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("login-form");
   const closeLoginModal = document.querySelector(".close-login-modal");
   const loginMessage = document.getElementById("login-message");
+  const announcementBanner = document.getElementById("announcement-banner");
+
+  async function fetchAnnouncement() {
+    try {
+      const response = await fetch("/announcement");
+      if (!response.ok) {
+        return;
+      }
+
+      const announcement = await response.json();
+      if (announcement.enabled && announcement.message) {
+        announcementBanner.textContent = announcement.message;
+        announcementBanner.classList.remove("hidden");
+      }
+    } catch (error) {
+      console.error("Error loading announcement:", error);
+    }
+  }
 
   // Activity categories with corresponding colors
   const activityTypes = {
@@ -865,4 +883,5 @@ document.addEventListener("DOMContentLoaded", () => {
   checkAuthentication();
   initializeFilters();
   fetchActivities();
+  fetchAnnouncement();
 });
